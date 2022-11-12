@@ -7,7 +7,9 @@ import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class AuthActivity extends AppCompatActivity implements LoginFragment.LoginListener, SignUpFragment.SignUpListener {
+public class AuthActivity extends AppCompatActivity implements
+        LoginFragment.LoginListener, SignUpFragment.SignUpListener {
+
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {

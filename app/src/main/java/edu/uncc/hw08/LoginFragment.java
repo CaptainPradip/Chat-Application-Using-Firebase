@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import edu.uncc.hw08.databinding.FragmentLoginBinding;
@@ -47,19 +50,22 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 String email = binding.editTextEmail.getText().toString();
                 String password = binding.editTextPassword.getText().toString();
-
                 if(email.isEmpty()){
-                    Toast.makeText(getContext(), "Email is required", Toast.LENGTH_SHORT).show();
-                } else if(password.isEmpty()){
-                    Toast.makeText(getContext(), "Password is required", Toast.LENGTH_SHORT).show();
+                    MyAlertDialog.show(getContext(), "Error", "Enter valid email!");
+                } else if (password.isEmpty()){
+                    MyAlertDialog.show(getContext(), "Error", "Enter valid password!");
                 } else {
-                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), task -> {
-                        if(task.isSuccessful()){
-                            mListener.gotoMyChat();
-                        } else {
-                            Toast.makeText(getActivity(), "Login Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        mListener.gotoMyChat();
+                                    } else {
+                                        MyAlertDialog.show(getContext(), "Login Unsuccessful", task.getException().getMessage());
+                                    }
+                                }
+                            });
                 }
             }
         });
