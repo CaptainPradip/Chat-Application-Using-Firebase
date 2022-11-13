@@ -2,7 +2,9 @@ package edu.uncc.hw08.adaptors;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import edu.uncc.hw08.CreateChatFragment;
+import edu.uncc.hw08.R;
 import edu.uncc.hw08.databinding.UsersRowItemBinding;
 import edu.uncc.hw08.models.Conversation;
 import edu.uncc.hw08.models.User;
@@ -23,10 +27,12 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     Context context;
+    CreateChatFragment createChatFragment;
 
-    public UserRecyclerViewAdapter(Context context, ArrayList<User> users) {
+    public UserRecyclerViewAdapter(Context context, ArrayList<User> users, CreateChatFragment createChatFragment) {
         this.users = users;
         this.context = context;
+        this.createChatFragment = createChatFragment;
     }
 
     public HashMap<String, Object> createMap(Conversation myChat) {
@@ -61,13 +67,25 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         }
 
         void setupUI(User user) {
+
+            mBinding.userRow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    createChatFragment.setSelectedUser(user);
+                }
+            });
+
             mBinding.textViewName.setText(user.getUserName());
             if (user.isOnline()) {
-                //   mBinding.imageViewOnline.setImageDrawable();
+                mBinding.imageViewOnline.setImageResource(R.drawable.ic_online);
             } else {
-                //   mBinding.imageViewOnline.setImageDrawable();
+                mBinding.imageViewOnline.setVisibility(View.INVISIBLE);
             }
 
         }
+    }
+
+    interface UserAdapterListener {
+        void setSelectedUser(User user);
     }
 }

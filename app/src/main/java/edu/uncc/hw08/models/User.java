@@ -41,7 +41,11 @@ public class User implements Serializable {
     }
 
     public void setConversations(ArrayList<String> conversations) {
-        this.conversations = conversations;
+        if (conversations != null) {
+            this.conversations = conversations;
+        } else {
+            this.conversations = new ArrayList<>();
+        }
     }
 
     @Override
