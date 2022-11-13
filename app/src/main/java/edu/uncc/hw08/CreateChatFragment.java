@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -179,6 +180,48 @@ public class CreateChatFragment extends Fragment {
                     MyAlertDialog.show(getContext(), "Error", task.getException().getMessage());
             }
         });
+
+        db.collection("users").document(sender.getUserId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            ArrayList<String> conversations = sender.getConversations();
+                            conversations.add(docRef.getId());
+
+                            db.collection("users").document(sender.getUserId())
+                                    .update("conversations", conversations)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+
+                                        }
+                                    });
+                        }
+                    }
+                });
+
+        db.collection("users").document(receiver.getUserId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            ArrayList<String> conversations = receiver.getConversations();
+                            conversations.add(docRef.getId());
+
+                            db.collection("users").document(receiver.getUserId())
+                                    .update("conversations", conversations)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+
+                                        }
+                                    });
+                        }
+                    }
+                });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -218,5 +261,6 @@ public class CreateChatFragment extends Fragment {
     CreateChatListener mListener;
     public interface CreateChatListener {
         void cancel();
+        void chat();
     }
 }

@@ -76,8 +76,9 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             });
 
             mBinding.textViewName.setText(user.getUserName());
+            mBinding.imageViewOnline.setImageResource(R.drawable.ic_online);
             if (user.isOnline()) {
-                mBinding.imageViewOnline.setImageResource(R.drawable.ic_online);
+                mBinding.imageViewOnline.setVisibility(View.VISIBLE);
             } else {
                 mBinding.imageViewOnline.setVisibility(View.INVISIBLE);
             }
