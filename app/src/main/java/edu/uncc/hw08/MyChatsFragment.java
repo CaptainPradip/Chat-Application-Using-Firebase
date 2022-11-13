@@ -1,42 +1,54 @@
 package edu.uncc.hw08;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.function.ObjIntConsumer;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+import edu.uncc.hw08.adaptors.MyChatsListViewAdapter;
 import edu.uncc.hw08.databinding.FragmentMyChatsBinding;
+import edu.uncc.hw08.models.Conversation;
+import edu.uncc.hw08.models.User;
 
 public class MyChatsFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    FragmentMyChatsBinding binding;
+    public static final String TAG = "MyChatsFragment";
+    private static final String ARG_PARAM = "param1";
+    ArrayList<Conversation> myChats = new ArrayList<Conversation>();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-    private String mParam1;
-    private String mParam2;
+    MyChatsListViewAdapter adapter;
+    FragmentMyChatsBinding binding;
+    MyChatsListener mListener;
+    Conversation myChat;
+    User mUser;
 
     public MyChatsFragment() {
         // Required empty public constructor
     }
 
-    public static MyChatsFragment newInstance(String param1, String param2) {
+    public static MyChatsFragment newInstance(User param) {
         MyChatsFragment fragment = new MyChatsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM, param);
+        fragment.setArguments(args);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,8 +57,7 @@ public class MyChatsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mUser = (User) getArguments().getSerializable(ARG_PARAM);
         }
     }
 
@@ -62,6 +73,32 @@ public class MyChatsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("My Chats");
+
+        binding.listView.setAdapter(adapter);
+
+        adapter = new MyChatsListViewAdapter(getActivity(), R.layout.my_chats_list_item, myChats);
+        binding.listView.setAdapter(adapter);
+
+        binding.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                myChat = myChats.get(position);
+
+            }
+        });
+        CollectionReference ref = db.collection("conversations");
+        ref.whereArrayContains("id", Arrays.asList(mUser.getConversations()));
+        ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                myChats.clear();
+                for (QueryDocumentSnapshot doc : value) {
+                    Conversation myChat = new Conversation();
+                    Log.d(TAG, "onEvent: " + myChat);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         binding.buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,9 +122,9 @@ public class MyChatsFragment extends Fragment {
         mListener = (MyChatsListener) context;
     }
 
-    MyChatsListener mListener;
     interface MyChatsListener {
         void gotoLogin();
+
         void createChat();
     }
 }

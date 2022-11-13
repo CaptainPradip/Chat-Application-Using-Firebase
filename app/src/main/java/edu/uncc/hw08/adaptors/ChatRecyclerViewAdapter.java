@@ -52,7 +52,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         return chats.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         ChatListItemBinding mBinding;
 
         public ViewHolder(ChatListItemBinding binding) {

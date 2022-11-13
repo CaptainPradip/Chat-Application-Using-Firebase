@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Conversation implements Serializable {
-    public String chatId;
+    public String id;
     public String senderId;
     public String receiverId;
     public Message latestChat;
@@ -26,12 +26,12 @@ public class Conversation implements Serializable {
         this.receiverId = receiverId;
     }
 
-    public String getChatId() {
-        return chatId;
+    public String getId() {
+        return id;
     }
 
-    public void setChatId(String chatId) {
-        this.chatId = chatId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Message getLatestChat() {
@@ -53,7 +53,7 @@ public class Conversation implements Serializable {
     @Override
     public String toString() {
         return "MyChat{" +
-                "chatId='" + chatId + '\'' +
+                "chatId='" + id + '\'' +
                 ", senderId='" + senderId + '\'' +
                 ", receiverId='" + receiverId + '\'' +
                 ", latestChat=" + latestChat +
