@@ -62,7 +62,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
 
         void setupUI(User user) {
             mBinding.textViewName.setText(user.getUserName());
-            if (user.getOnlineStatus()) {
+            if (user.isOnlineStatus()) {
                 //   mBinding.imageViewOnline.setImageDrawable();
             } else {
                 //   mBinding.imageViewOnline.setImageDrawable();

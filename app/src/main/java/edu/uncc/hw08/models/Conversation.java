@@ -52,8 +52,8 @@ public class Conversation implements Serializable {
 
     @Override
     public String toString() {
-        return "MyChat{" +
-                "chatId='" + id + '\'' +
+        return "Conversation{" +
+                "id='" + id + '\'' +
                 ", senderId='" + senderId + '\'' +
                 ", receiverId='" + receiverId + '\'' +
                 ", latestChat=" + latestChat +

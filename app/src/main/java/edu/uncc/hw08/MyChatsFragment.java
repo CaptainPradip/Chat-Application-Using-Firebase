@@ -21,7 +21,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import edu.uncc.hw08.adaptors.MyChatsListViewAdapter;
 import edu.uncc.hw08.databinding.FragmentMyChatsBinding;
@@ -31,13 +30,13 @@ import edu.uncc.hw08.models.User;
 public class MyChatsFragment extends Fragment {
     public static final String TAG = "MyChatsFragment";
     private static final String ARG_PARAM = "param1";
-    ArrayList<Conversation> myChats = new ArrayList<Conversation>();
+    ArrayList<Conversation> conversations = new ArrayList<Conversation>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     MyChatsListViewAdapter adapter;
     FragmentMyChatsBinding binding;
     MyChatsListener mListener;
-    Conversation myChat;
+    Conversation conversation;
     User mUser;
 
     public MyChatsFragment() {
@@ -76,22 +75,22 @@ public class MyChatsFragment extends Fragment {
 
         binding.listView.setAdapter(adapter);
 
-        adapter = new MyChatsListViewAdapter(getActivity(), R.layout.my_chats_list_item, myChats);
+        adapter = new MyChatsListViewAdapter(getActivity(), R.layout.my_chats_list_item, conversations);
         binding.listView.setAdapter(adapter);
 
         binding.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                myChat = myChats.get(position);
-
+                conversation = conversations.get(position);
+                Log.d(TAG, "onItemClick: " + conversation);
             }
         });
         CollectionReference ref = db.collection("conversations");
-        ref.whereArrayContains("id", Arrays.asList(mUser.getConversations()));
+        ref.whereArrayContains("id", "JcRcAn06rvgL4jUUUALT");//Arrays.asList(mUser.getConversations())
         ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                myChats.clear();
+                // conversations.clear();
                 for (QueryDocumentSnapshot doc : value) {
                     Conversation myChat = new Conversation();
                     Log.d(TAG, "onEvent: " + myChat);
