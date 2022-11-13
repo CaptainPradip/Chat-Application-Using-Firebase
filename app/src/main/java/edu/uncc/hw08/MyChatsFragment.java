@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -75,6 +76,19 @@ public class MyChatsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("My Chats");
+
+        db.collection("users")
+            .document(mAuth.getCurrentUser().getUid())
+            .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    mUser = new User();
+                    mUser.setUserId(value.getString("userId"));
+                    mUser.setUserName(value.getString("userName"));
+                    mUser.setOnline((Boolean) value.get("isOnline"));
+                    mUser.setConversations((ArrayList<String>) value.get("conversations"));
+                }
+            });
 
         binding.listView.setAdapter(adapter);
 
