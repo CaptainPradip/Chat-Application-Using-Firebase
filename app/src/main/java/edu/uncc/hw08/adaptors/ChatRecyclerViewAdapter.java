@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import edu.uncc.hw08.ChatFragment;
 import edu.uncc.hw08.databinding.ChatListItemBinding;
 import edu.uncc.hw08.models.Message;
 
@@ -21,11 +22,13 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     ArrayList<Message> chats = new ArrayList<Message>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    ChatFragment.ChatListener mListener;
     Context context;
 
-    public ChatRecyclerViewAdapter(Context context, ArrayList<Message> comments) {
-        this.chats = comments;
+    public ChatRecyclerViewAdapter(Context context, ArrayList<Message> messages, ChatFragment.ChatListener mListener) {
+        this.chats = messages;
         this.context = context;
+        this.mListener = mListener;
     }
 
     public HashMap<String, Object> createMap(Message chat) {

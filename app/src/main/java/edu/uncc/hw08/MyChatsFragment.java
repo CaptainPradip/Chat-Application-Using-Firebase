@@ -21,14 +21,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import edu.uncc.hw08.adaptors.MyChatsListViewAdapter;
 import edu.uncc.hw08.databinding.FragmentMyChatsBinding;
 import edu.uncc.hw08.models.Conversation;
+import edu.uncc.hw08.models.Message;
 import edu.uncc.hw08.models.User;
 
 public class MyChatsFragment extends Fragment {
@@ -91,12 +92,25 @@ public class MyChatsFragment extends Fragment {
                         if (mUser.getConversations().size() != 0) {
                             CollectionReference ref = db.collection("conversations");
                             ArrayList<String> conversationIds = mUser.getConversations();
-                            Log.d(TAG, "onEvent: " + Arrays.asList(mUser.getConversations()));
                             ref.whereArrayContains("id", mUser.getConversations());
                             ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    conversations.clear();
+                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                        Conversation conversation = new Conversation();
+                                        conversation.setLatestMessage(doc.getString("latestMessage"));
+                                        conversation.setLatestMessageAt(doc.getString("latestMessageAt"));
+                                        conversation.setLatestMessageBy(doc.getString("latestMessageBy"));
+                                        conversation.setId(doc.getString("id"));
+                                        conversation.setSenderId(doc.getString("senderId"));
+                                        conversation.setReceiverId(doc.getString("receiverId"));
 
+                                        conversation.setMessages((ArrayList<Message>) doc.get("messages"));
+                                        conversations.add(conversation);
+                                        Log.d(TAG, "onSuccess: " + conversation);
+                                    }
+                                    adapter.notifyDataSetChanged();
                                 }
                             });
 

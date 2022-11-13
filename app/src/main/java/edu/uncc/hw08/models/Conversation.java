@@ -41,7 +41,13 @@ public class Conversation implements Serializable {
     }
 
     public void setLatestMessage(String latestMessage) {
-        this.latestMessage = latestMessage;
+        if (latestMessage != null) {
+            this.latestMessage = latestMessage;
+        } else {
+            this.latestMessage = "";
+        }
+
+
     }
 
     public String getLatestMessageAt() {
@@ -49,7 +55,12 @@ public class Conversation implements Serializable {
     }
 
     public void setLatestMessageAt(String latestMessageAt) {
-        this.latestMessageAt = latestMessageAt;
+        if (latestMessageAt != null) {
+            this.latestMessageAt = latestMessageAt;
+        } else {
+            this.latestMessageAt = "";
+        }
+
     }
 
     public ArrayList<Message> getMessages() {
@@ -57,7 +68,12 @@ public class Conversation implements Serializable {
     }
 
     public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
+        if (messages != null) {
+            this.messages = messages;
+        } else {
+            this.messages = new ArrayList<>();
+        }
+
     }
 
     public String getLatestMessageBy() {
@@ -65,7 +81,12 @@ public class Conversation implements Serializable {
     }
 
     public void setLatestMessageBy(String latestMessageBy) {
-        this.latestMessageBy = latestMessageBy;
+        if (latestMessageBy != null) {
+            this.latestMessageBy = latestMessageBy;
+        } else {
+            this.latestMessageBy = "";
+        }
+
     }
 
     @Override

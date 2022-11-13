@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements MyChatsFragment.MyChatsListener,
+public class MainActivity extends AppCompatActivity implements MyChatsFragment.MyChatsListener, ChatFragment.ChatListener,
         CreateChatFragment.CreateChatListener {
 
     @Override
