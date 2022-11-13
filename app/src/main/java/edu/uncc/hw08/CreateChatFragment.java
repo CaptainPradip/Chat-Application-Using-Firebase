@@ -131,6 +131,7 @@ public class CreateChatFragment extends Fragment {
                     else {
                         continueConversation(message, senderConversations.stream().findFirst().get());
                     }
+
                 }
             }
         });
@@ -222,6 +223,8 @@ public class CreateChatFragment extends Fragment {
                         }
                     }
                 });
+
+        mListener.gotoChatFragment(docRef.getId());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -255,12 +258,12 @@ public class CreateChatFragment extends Fragment {
 
             }
         });
-
+        mListener.gotoChatFragment(conversationId);
     }
 
     CreateChatListener mListener;
     public interface CreateChatListener {
         void cancel();
-        void chat();
+        void gotoChatFragment(String conversationId);
     }
 }

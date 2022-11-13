@@ -45,4 +45,11 @@ public class MainActivity extends AppCompatActivity implements MyChatsFragment.M
     public void cancel() {
         getSupportFragmentManager().popBackStack();
     }
+
+    @Override
+    public void gotoChatFragment(String conversationId) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.rootView, ChatFragment.newInstance(conversationId))
+                .commit();
+    }
 }
