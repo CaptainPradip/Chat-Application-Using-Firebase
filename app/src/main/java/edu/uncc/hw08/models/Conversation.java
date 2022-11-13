@@ -7,7 +7,8 @@ public class Conversation implements Serializable {
     public String id;
     public String senderId;
     public String receiverId;
-    public Message latestChat;
+    public String latestMessage;
+    public String latestMessageAt;
     public ArrayList<Message> messages;
 
     public String getSenderId() {
@@ -34,12 +35,20 @@ public class Conversation implements Serializable {
         this.id = id;
     }
 
-    public Message getLatestChat() {
-        return latestChat;
+    public String getLatestMessage() {
+        return latestMessage;
     }
 
-    public void setLatestChat(Message latestChat) {
-        this.latestChat = latestChat;
+    public void setLatestMessage(String latestMessage) {
+        this.latestMessage = latestMessage;
+    }
+
+    public String getLatestMessageAt() {
+        return latestMessageAt;
+    }
+
+    public void setLatestMessageAt(String latestMessageAt) {
+        this.latestMessageAt = latestMessageAt;
     }
 
     public ArrayList<Message> getMessages() {
@@ -56,7 +65,8 @@ public class Conversation implements Serializable {
                 "id='" + id + '\'' +
                 ", senderId='" + senderId + '\'' +
                 ", receiverId='" + receiverId + '\'' +
-                ", latestChat=" + latestChat +
+                ", latestMessage='" + latestMessage + '\'' +
+                ", latestMessageAt='" + latestMessageAt + '\'' +
                 ", messages=" + messages +
                 '}';
     }
