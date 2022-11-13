@@ -84,7 +84,7 @@ public class ChatFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.recyclerView.setHasFixedSize(true);
-        adapter = new ChatRecyclerViewAdapter(getContext(), messages, mListener);
+        adapter = new ChatRecyclerViewAdapter(getContext(), messages, mListener, mConversationId);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.scrollToPosition(messages.size() - 1);
