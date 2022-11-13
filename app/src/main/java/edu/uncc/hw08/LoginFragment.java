@@ -13,9 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import edu.uncc.hw08.databinding.FragmentLoginBinding;
 
@@ -40,6 +44,7 @@ public class LoginFragment extends Fragment {
     }
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -60,7 +65,20 @@ public class LoginFragment extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        mListener.gotoMyChat();
+                                        DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getUid());
+                                        docRef.update("isOnline", true)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        mListener.gotoMyChat();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        MyAlertDialog.show(getContext(), "Error", e.getMessage());
+                                                    }
+                                                });
                                     } else {
                                         MyAlertDialog.show(getContext(), "Login Unsuccessful", task.getException().getMessage());
                                     }

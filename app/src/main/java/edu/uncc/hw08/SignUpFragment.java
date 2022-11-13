@@ -15,15 +15,23 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.checkerframework.checker.units.qual.A;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import edu.uncc.hw08.databinding.FragmentSignUpBinding;
 
 public class SignUpFragment extends Fragment {
+
     public SignUpFragment() {
         // Required empty public constructor
     }
@@ -34,7 +42,7 @@ public class SignUpFragment extends Fragment {
     }
 
     FragmentSignUpBinding binding;
-
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,7 +97,23 @@ public class SignUpFragment extends Fragment {
                                                 });
 
                                         Log.d("demo", "onComplete: " + mAuth.getCurrentUser().getDisplayName());
-                                        mListener.gotoMyChat();
+
+                                        ArrayList<String> conversations = new ArrayList<>();
+                                        HashMap<String, Object> map = new HashMap<>();
+                                        map.put("userId", mAuth.getCurrentUser().getUid());
+                                        map.put("userName", name);
+                                        map.put("isOnline", true);
+                                        map.put("conversations", conversations);
+
+                                        db.collection("users")
+                                                .document(mAuth.getCurrentUser().getUid())
+                                                .set(map)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void unused) {
+                                                                mListener.gotoMyChat();
+                                                            }
+                                                        });
                                     } else {
                                         MyAlertDialog.show(getContext(), "Sign Up Unsuccessful", task.getException().getMessage());
                                     }

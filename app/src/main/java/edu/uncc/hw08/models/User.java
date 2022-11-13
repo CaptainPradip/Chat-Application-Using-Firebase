@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class User implements Serializable {
     String userId;
-    boolean onlineStatus;
+    boolean isOnline;
     String userName;
     ArrayList<String> conversations;
 
@@ -20,12 +20,12 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
-    public boolean isOnlineStatus() {
-        return onlineStatus;
+    public boolean isOnline() {
+        return isOnline;
     }
 
-    public void setOnlineStatus(boolean onlineStatus) {
-        this.onlineStatus = onlineStatus;
+    public void setOnline(boolean online) {
+        isOnline = online;
     }
 
     public String getUserName() {
@@ -42,15 +42,5 @@ public class User implements Serializable {
 
     public void setConversations(ArrayList<String> conversations) {
         this.conversations = conversations;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId='" + userId + '\'' +
-                ", onlineStatus=" + onlineStatus +
-                ", userName='" + userName + '\'' +
-                ", conversations=" + conversations +
-                '}';
     }
 }
