@@ -7,7 +7,10 @@ public class User implements Serializable {
     String userId;
     boolean onlineStatus;
     String userName;
-    ArrayList<Conversation> conversations;
+    ArrayList<String> conversations;
+
+    public User() {
+    }
 
     public String getUserId() {
         return userId;
@@ -18,18 +21,6 @@ public class User implements Serializable {
     }
 
     public boolean isOnlineStatus() {
-        return onlineStatus;
-    }
-
-    public ArrayList<Conversation> getMyChats() {
-        return conversations;
-    }
-
-    public void setMyChats(ArrayList<Conversation> conversations) {
-        this.conversations = conversations;
-    }
-
-    public boolean getOnlineStatus() {
         return onlineStatus;
     }
 
@@ -45,12 +36,21 @@ public class User implements Serializable {
         this.userName = userName;
     }
 
+    public ArrayList<String> getConversations() {
+        return conversations;
+    }
+
+    public void setConversations(ArrayList<String> conversations) {
+        this.conversations = conversations;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "userId='" + userId + '\'' +
-                ", onlineStatus='" + onlineStatus + '\'' +
+                ", onlineStatus=" + onlineStatus +
                 ", userName='" + userName + '\'' +
+                ", conversations=" + conversations +
                 '}';
     }
 }
