@@ -13,9 +13,9 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -126,20 +126,30 @@ public class ChatFragment extends Fragment {
                     map.put("message", message);
                     map.put("senderId", mAuth.getCurrentUser().getUid());
                     map.put("messageBy", mAuth.getCurrentUser().getDisplayName());
-                    db.collection("conversations").document(mConversationId)
-                            .collection("messages").document(messageId)
-                            .set(map)
-                            .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        binding.editTextMessage.setText("");
+                    HashMap<String, Object> conversationMap = new HashMap<>();
 
-                                    } else {
-                                        MyAlertDialog.show(getContext(), "Error", task.getException().getMessage());
-                                    }
-                                }
-                            });
+                    LocalDateTime now = LocalDateTime.now();
+                    String dateTimeString = now.format(formatter);
+
+                    map.put("senderId", mAuth.getCurrentUser().getUid());
+                    map.put("latestMessage", message);
+                    map.put("latestMessageAt", dateTimeString);
+                    DocumentReference ref = db.collection("conversations").document(mConversationId);
+                    map.put("latestMessageBy", mAuth.getCurrentUser().getDisplayName());
+                    ref.update(conversationMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            ref.collection("messages").document(messageId)
+                                    .set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+
+                                        }
+                                    });
+
+
+                        }
+                    });
                 }
             }
         });

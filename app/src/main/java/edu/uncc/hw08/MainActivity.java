@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity implements MyChatsFragment.M
         setContentView(R.layout.activity_main);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.rootView, new MyChatsFragment())
+                .replace(R.id.rootView, new MyChatsFragment())
                 .commit();
     }
 

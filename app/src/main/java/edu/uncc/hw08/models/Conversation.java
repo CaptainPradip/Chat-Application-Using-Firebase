@@ -1,9 +1,16 @@
 package edu.uncc.hw08.models;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import android.os.Build;
 
-public class Conversation implements Serializable {
+import androidx.annotation.RequiresApi;
+
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+public class Conversation implements Serializable, Comparable<Conversation> {
     public String id;
     public String senderId;
     public String receiverId;
@@ -100,5 +107,23 @@ public class Conversation implements Serializable {
                 ", latestMessageBy='" + latestMessageBy + '\'' +
                 ", messages=" + messages +
                 '}';
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public int compareTo(Conversation o) {
+        String msgDate = this.getLatestMessageAt();
+        String OthermsgDate = o.getLatestMessageAt();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+
+        try {
+            Date msgDateType = formatter.parse(msgDate);
+            Date OthermsgDateTpe = formatter.parse(OthermsgDate);
+            return msgDateType.compareTo(OthermsgDateTpe);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+
     }
 }
