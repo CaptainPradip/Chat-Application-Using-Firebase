@@ -14,21 +14,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.uncc.hw08.databinding.ChatListItemBinding;
-import edu.uncc.hw08.models.Chat;
+import edu.uncc.hw08.models.Message;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
 
-    ArrayList<Chat> chats = new ArrayList<Chat>();
+    ArrayList<Message> chats = new ArrayList<Message>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     Context context;
 
-    public ChatRecyclerViewAdapter(Context context, ArrayList<Chat> comments) {
+    public ChatRecyclerViewAdapter(Context context, ArrayList<Message> comments) {
         this.chats = comments;
         this.context = context;
     }
 
-    public HashMap<String, Object> createMap(Chat chat) {
+    public HashMap<String, Object> createMap(Message chat) {
         HashMap<String, Object> map = new HashMap<>();
 
         return map;
@@ -43,7 +43,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Chat chat = chats.get(position);
+        Message chat = chats.get(position);
         holder.setupUI(chat);
     }
 
@@ -60,10 +60,10 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
             mBinding = binding;
         }
 
-        void setupUI(Chat chat) {
-            mBinding.textViewMsgBy.setText(chat.chatBy);
-            mBinding.textViewMsgText.setText(chat.chat);
-            mBinding.textViewMsgOn.setText(chat.chatAt);
+        void setupUI(Message chat) {
+            mBinding.textViewMsgBy.setText(chat.messageBy);
+            mBinding.textViewMsgText.setText(chat.message);
+            mBinding.textViewMsgOn.setText(chat.messageAt);
         }
     }
 }

@@ -14,21 +14,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.uncc.hw08.databinding.MyChatsListItemBinding;
-import edu.uncc.hw08.models.MyChat;
+import edu.uncc.hw08.models.Conversation;
 
 public class MyChatsRecyclerViewAdapter extends RecyclerView.Adapter<MyChatsRecyclerViewAdapter.ViewHolder> {
 
-    ArrayList<MyChat> myChats = new ArrayList<MyChat>();
+    ArrayList<Conversation> myChats = new ArrayList<Conversation>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     Context context;
 
-    public MyChatsRecyclerViewAdapter(Context context, ArrayList<MyChat> comments) {
+    public MyChatsRecyclerViewAdapter(Context context, ArrayList<Conversation> comments) {
         this.myChats = comments;
         this.context = context;
     }
 
-    public HashMap<String, Object> createMap(MyChat myChat) {
+    public HashMap<String, Object> createMap(Conversation myChat) {
         HashMap<String, Object> map = new HashMap<>();
 
         return map;
@@ -43,7 +43,7 @@ public class MyChatsRecyclerViewAdapter extends RecyclerView.Adapter<MyChatsRecy
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MyChat myChat = myChats.get(position);
+        Conversation myChat = myChats.get(position);
         holder.setupUI(myChat);
     }
 
@@ -60,10 +60,10 @@ public class MyChatsRecyclerViewAdapter extends RecyclerView.Adapter<MyChatsRecy
             mBinding = binding;
         }
 
-        void setupUI(MyChat myChat) {
-            mBinding.textViewMsgBy.setText(myChat.latestChat.chat);
-            mBinding.textViewMsgText.setText(myChat.latestChat.chat);
-            mBinding.textViewMsgOn.setText(myChat.latestChat.chatAt);
+        void setupUI(Conversation myChat) {
+            mBinding.textViewMsgBy.setText(myChat.latestChat.message);
+            mBinding.textViewMsgText.setText(myChat.latestChat.message);
+            mBinding.textViewMsgOn.setText(myChat.latestChat.messageAt);
         }
     }
 }

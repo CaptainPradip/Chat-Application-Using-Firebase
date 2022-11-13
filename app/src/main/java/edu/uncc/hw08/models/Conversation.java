@@ -3,12 +3,12 @@ package edu.uncc.hw08.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MyChat implements Serializable {
+public class Conversation implements Serializable {
     public String chatId;
     public String senderId;
     public String receiverId;
-    public Chat latestChat;
-    public ArrayList<Chat> messages;
+    public Message latestChat;
+    public ArrayList<Message> messages;
 
     public String getSenderId() {
         return senderId;
@@ -34,19 +34,19 @@ public class MyChat implements Serializable {
         this.chatId = chatId;
     }
 
-    public Chat getLatestChat() {
+    public Message getLatestChat() {
         return latestChat;
     }
 
-    public void setLatestChat(Chat latestChat) {
+    public void setLatestChat(Message latestChat) {
         this.latestChat = latestChat;
     }
 
-    public ArrayList<Chat> getMessages() {
+    public ArrayList<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(ArrayList<Chat> messages) {
+    public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
     }
 

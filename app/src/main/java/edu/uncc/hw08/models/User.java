@@ -7,7 +7,7 @@ public class User implements Serializable {
     String userId;
     boolean onlineStatus;
     String userName;
-    ArrayList<MyChat> conversations;
+    ArrayList<Conversation> conversations;
 
     public String getUserId() {
         return userId;
@@ -21,11 +21,11 @@ public class User implements Serializable {
         return onlineStatus;
     }
 
-    public ArrayList<MyChat> getMyChats() {
+    public ArrayList<Conversation> getMyChats() {
         return conversations;
     }
 
-    public void setMyChats(ArrayList<MyChat> conversations) {
+    public void setMyChats(ArrayList<Conversation> conversations) {
         this.conversations = conversations;
     }
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.uncc.hw08.databinding.UsersRowItemBinding;
-import edu.uncc.hw08.models.MyChat;
+import edu.uncc.hw08.models.Conversation;
 import edu.uncc.hw08.models.User;
 
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
@@ -29,7 +29,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         this.context = context;
     }
 
-    public HashMap<String, Object> createMap(MyChat myChat) {
+    public HashMap<String, Object> createMap(Conversation myChat) {
         HashMap<String, Object> map = new HashMap<>();
         return map;
     }
