@@ -92,7 +92,7 @@ public class MyChatsFragment extends Fragment {
                         if (mUser.getConversations().size() != 0) {
                             CollectionReference ref = db.collection("conversations");
                             ArrayList<String> conversationIds = mUser.getConversations();
-                            ref.whereArrayContains("id", mUser.getConversations());
+
                             ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -107,9 +107,12 @@ public class MyChatsFragment extends Fragment {
                                         conversation.setReceiverId(doc.getString("receiverId"));
 
                                         conversation.setMessages((ArrayList<Message>) doc.get("messages"));
-                                        conversations.add(conversation);
+                                        if (conversationIds.contains(conversation.id)) {
+                                            conversations.add(conversation);
+                                        }
                                         Log.d(TAG, "onSuccess: " + conversation);
                                     }
+                                    Log.d(TAG, "onSuccess: " + conversations);
                                     adapter.notifyDataSetChanged();
                                 }
                             });

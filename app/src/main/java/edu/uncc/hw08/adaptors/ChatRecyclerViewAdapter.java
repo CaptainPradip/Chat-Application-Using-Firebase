@@ -23,12 +23,12 @@ import edu.uncc.hw08.models.Message;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
 
+    private final String mConversationId;
     ArrayList<Message> chats = new ArrayList<Message>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     ChatFragment.ChatListener mListener;
     Context context;
-    private String mConversationId;
 
     public ChatRecyclerViewAdapter(Context context, ArrayList<Message> messages, ChatFragment.ChatListener mListener, String mConversationId) {
         this.chats = messages;
