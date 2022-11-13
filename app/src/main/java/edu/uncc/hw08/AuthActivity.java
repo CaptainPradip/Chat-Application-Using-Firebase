@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import edu.uncc.hw08.models.User;
+
 public class AuthActivity extends AppCompatActivity implements
         LoginFragment.LoginListener, SignUpFragment.SignUpListener {
 
