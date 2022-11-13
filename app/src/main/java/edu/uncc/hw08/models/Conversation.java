@@ -9,6 +9,7 @@ public class Conversation implements Serializable {
     public String receiverId;
     public String latestMessage;
     public String latestMessageAt;
+    public String latestMessageBy;
     public ArrayList<Message> messages;
 
     public String getSenderId() {
@@ -59,6 +60,14 @@ public class Conversation implements Serializable {
         this.messages = messages;
     }
 
+    public String getLatestMessageBy() {
+        return latestMessageBy;
+    }
+
+    public void setLatestMessageBy(String latestMessageBy) {
+        this.latestMessageBy = latestMessageBy;
+    }
+
     @Override
     public String toString() {
         return "Conversation{" +
@@ -67,6 +76,7 @@ public class Conversation implements Serializable {
                 ", receiverId='" + receiverId + '\'' +
                 ", latestMessage='" + latestMessage + '\'' +
                 ", latestMessageAt='" + latestMessageAt + '\'' +
+                ", latestMessageBy='" + latestMessageBy + '\'' +
                 ", messages=" + messages +
                 '}';
     }

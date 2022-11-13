@@ -49,9 +49,9 @@ public class MyChatsListViewAdapter extends ArrayAdapter<Conversation> {
         Conversation myChat = getItem(position);
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
-        viewHolder.textViewMsgBy.setText(myChat.latestChat.messageBy);
-        viewHolder.textViewMsgOn.setText(myChat.latestChat.message);
-        viewHolder.textViewMsgText.setText(myChat.latestChat.messageAt);
+        viewHolder.textViewMsgBy.setText(myChat.latestMessageBy);
+        viewHolder.textViewMsgOn.setText(myChat.latestMessageAt);
+        viewHolder.textViewMsgText.setText(myChat.latestMessage);
 
         return convertView;
     }

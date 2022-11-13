@@ -21,10 +21,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import edu.uncc.hw08.adaptors.MyChatsListViewAdapter;
 import edu.uncc.hw08.databinding.FragmentMyChatsBinding;
@@ -78,20 +78,35 @@ public class MyChatsFragment extends Fragment {
         getActivity().setTitle("My Chats");
 
         db.collection("users")
-            .document(mAuth.getCurrentUser().getUid())
-            .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    mUser = new User();
-                    mUser.setUserId(value.getString("userId"));
-                    mUser.setUserName(value.getString("userName"));
-                    mUser.setOnline((Boolean) value.get("isOnline"));
-                    mUser.setConversations((ArrayList<String>) value.get("conversations"));
-                }
-            });
+                .document(mAuth.getCurrentUser().getUid())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        mUser = new User();
+                        mUser.setUserId(value.getString("userId"));
+                        mUser.setUserName(value.getString("userName"));
+                        mUser.setOnline((Boolean) value.get("isOnline"));
+                        mUser.setConversations((ArrayList<String>) value.get("conversations"));
+                        Log.d(TAG, "onEvent: " + mUser);
+                        if (mUser.getConversations().size() != 0) {
+                            CollectionReference ref = db.collection("conversations");
+                            ArrayList<String> conversationIds = mUser.getConversations();
+                            Log.d(TAG, "onEvent: " + Arrays.asList(mUser.getConversations()));
+                            ref.whereArrayContains("id", mUser.getConversations());
+                            ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                }
+                            });
+
+
+                        }
+
+                    }
+                });
 
         binding.listView.setAdapter(adapter);
-
         adapter = new MyChatsListViewAdapter(getActivity(), R.layout.my_chats_list_item, conversations);
         binding.listView.setAdapter(adapter);
 
@@ -100,19 +115,7 @@ public class MyChatsFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 conversation = conversations.get(position);
                 Log.d(TAG, "onItemClick: " + conversation);
-            }
-        });
-        CollectionReference ref = db.collection("conversations");
-        ref.whereArrayContains("id", "JcRcAn06rvgL4jUUUALT");//Arrays.asList(mUser.getConversations())
-        ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                // conversations.clear();
-                for (QueryDocumentSnapshot doc : value) {
-                    Conversation myChat = new Conversation();
-                    Log.d(TAG, "onEvent: " + myChat);
-                }
-                adapter.notifyDataSetChanged();
+                mListener.gotoConversation(conversation.id);
             }
         });
 
@@ -154,6 +157,8 @@ public class MyChatsFragment extends Fragment {
 
     interface MyChatsListener {
         void gotoLogin();
+
+        void gotoConversation(String conversationId);
 
         void createChat();
     }

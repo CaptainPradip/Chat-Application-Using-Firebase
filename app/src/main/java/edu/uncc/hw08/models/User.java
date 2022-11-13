@@ -43,4 +43,14 @@ public class User implements Serializable {
     public void setConversations(ArrayList<String> conversations) {
         this.conversations = conversations;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", isOnline=" + isOnline +
+                ", userName='" + userName + '\'' +
+                ", conversations=" + conversations +
+                '}';
+    }
 }

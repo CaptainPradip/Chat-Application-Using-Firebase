@@ -19,6 +19,14 @@ public class MainActivity extends AppCompatActivity implements MyChatsFragment.M
     }
 
     @Override
+    public void gotoConversation(String conversationId) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.rootView, ChatFragment.newInstance(conversationId))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
     public void gotoLogin() {
         Intent intent = new Intent(this, AuthActivity.class);
         startActivity(intent);
