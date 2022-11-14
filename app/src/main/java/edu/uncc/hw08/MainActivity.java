@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import edu.uncc.hw08.models.Conversation;
+
 public class MainActivity extends AppCompatActivity implements MyChatsFragment.MyChatsListener, ChatFragment.ChatListener,
         CreateChatFragment.CreateChatListener {
 
@@ -14,14 +16,15 @@ public class MainActivity extends AppCompatActivity implements MyChatsFragment.M
         setContentView(R.layout.activity_main);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.rootView, new MyChatsFragment())
+                .add(R.id.rootView, new MyChatsFragment(), "MyChatsFragment")
                 .commit();
     }
+
 
     @Override
     public void gotoConversation(String conversationId) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.rootView, ChatFragment.newInstance(conversationId))
+                .replace(R.id.rootView, ChatFragment.newInstance(conversationId), "ChatFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -36,20 +39,24 @@ public class MainActivity extends AppCompatActivity implements MyChatsFragment.M
     @Override
     public void createChat() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.rootView, new CreateChatFragment())
+                .replace(R.id.rootView, new CreateChatFragment(), "CreateChatFragment")
                 .addToBackStack(null)
                 .commit();
     }
 
     @Override
     public void cancel() {
+        /*ChatFragment fragment = (ChatFragment) getSupportFragmentManager().findFragmentByTag("ChatFragment");
+        if (fragment != null)
+            getSupportFragmentManager().popBackStack();*/
         getSupportFragmentManager().popBackStack();
     }
 
     @Override
     public void gotoChatFragment(String conversationId) {
+
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.rootView, ChatFragment.newInstance(conversationId))
+                .replace(R.id.rootView, ChatFragment.newInstance(conversationId), "ChatFragment")
                 .commit();
     }
 }

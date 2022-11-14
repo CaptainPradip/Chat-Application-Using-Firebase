@@ -80,7 +80,8 @@ public class Message implements Serializable, Comparable<Message> {
             return msgDateType.compareTo(OthermsgDateTpe);
         } catch (ParseException e) {
             e.printStackTrace();
-            return -1;
+
         }
+        return  0;
     }
 }

@@ -11,6 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +24,12 @@ import edu.uncc.hw08.models.Conversation;
 public class MyChatsListViewAdapter extends ArrayAdapter<Conversation> {
 
     ArrayList<Conversation> myChats = new ArrayList<Conversation>();
+    String currentUserId;
 
-    public MyChatsListViewAdapter(@NonNull Context context, int resource, List<Conversation> myChats) {
+    public MyChatsListViewAdapter(@NonNull Context context, int resource, List<Conversation> myChats, String currentUserId) {
         super(context, resource, myChats);
         this.myChats = (ArrayList<Conversation>) myChats;
+        this.currentUserId = currentUserId;
     }
 
     @NonNull
@@ -42,7 +48,23 @@ public class MyChatsListViewAdapter extends ArrayAdapter<Conversation> {
         Log.d("TAG", "getView: " + myChat);
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
-        viewHolder.textViewMsgBy.setText(myChat.latestMessageBy);
+        String id1 = myChat.getSenderId();
+        String id2 = myChat.getReceiverId();
+        String temp;
+        if (!currentUserId.equals(id1))
+            temp = id1;
+        else
+            temp = id2;
+
+        FirebaseFirestore.getInstance().collection("users").document(temp)
+                        .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        viewHolder.textViewMsgBy.setText(documentSnapshot.getString("userName"));
+                                    }
+                                });
+
         viewHolder.textViewMsgOn.setText(myChat.latestMessageAt);
         viewHolder.textViewMsgText.setText(myChat.latestMessage);
 

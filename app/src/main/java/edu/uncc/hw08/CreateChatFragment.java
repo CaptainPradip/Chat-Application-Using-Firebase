@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -174,13 +176,34 @@ public class CreateChatFragment extends Fragment {
         map.put("latestMessageBy", sender.getUserName());
         //map.put("messages", new ArrayList<>());
 
-        docRef.set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (!task.isSuccessful())
-                    MyAlertDialog.show(getContext(), "Error", task.getException().getMessage());
-            }
-        });
+        docRef.set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        DocumentReference msgDocRef = docRef.collection("messages").document();
+                        Message newMessage = new Message();
+                        newMessage.setMessage(message);
+                        newMessage.setMessageAt(dateTimeString);
+                        newMessage.setMessageId(msgDocRef.getId());
+                        newMessage.setMessageBy(sender.getUserName());
+                        newMessage.setSenderId(sender.getUserId());
+
+                        msgDocRef.set(newMessage)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        MyAlertDialog.show(getContext(), "Error", e.getMessage());
+
+                    }
+                });
 
         db.collection("users").document(sender.getUserId())
                 .get()
@@ -234,7 +257,7 @@ public class CreateChatFragment extends Fragment {
         HashMap<String, Object> map = new HashMap<>();
 
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
         String dateTimeString = now.format(formatter);
 
         map.put("id", docRef.getId());

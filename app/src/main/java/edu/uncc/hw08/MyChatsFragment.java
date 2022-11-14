@@ -24,7 +24,12 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 import edu.uncc.hw08.adaptors.MyChatsListViewAdapter;
 import edu.uncc.hw08.databinding.FragmentMyChatsBinding;
@@ -93,7 +98,51 @@ public class MyChatsFragment extends Fragment {
                             CollectionReference ref = db.collection("conversations");
                             ArrayList<String> conversationIds = mUser.getConversations();
 
-                            ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    conversations.clear();
+                                    for (QueryDocumentSnapshot doc : value) {
+                                        Conversation conversation = new Conversation();
+                                        conversation.setLatestMessage(doc.getString("latestMessage"));
+                                        conversation.setLatestMessageAt(doc.getString("latestMessageAt"));
+                                        conversation.setLatestMessageBy(doc.getString("latestMessageBy"));
+                                        conversation.setId(doc.getString("id"));
+                                        conversation.setSenderId(doc.getString("senderId"));
+                                        conversation.setReceiverId(doc.getString("receiverId"));
+
+                                        conversation.setMessages((ArrayList<Message>) doc.get("messages"));
+                                        if (conversationIds.contains(conversation.id)) {
+                                            conversations.add(conversation);
+                                        }
+                                        Log.d(TAG, "onSuccess: " + conversation);
+                                    }
+                                    Log.d(TAG, "onSuccess: " + conversations);
+                                   // Collections.sort(conversations);
+                                    Log.d(TAG, "onEvent: + conversa");
+                                    adapter.sort(new Comparator<Conversation>() {
+                                        @Override
+                                        public int compare(Conversation conversation, Conversation t1) {
+                                            String msgDate = conversation.getLatestMessageAt();
+                                            String OthermsgDate = t1.getLatestMessageAt();
+                                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+
+                                            try {
+                                                Date msgDateType = formatter.parse(msgDate);
+                                                Date OthermsgDateTpe = formatter.parse(OthermsgDate);
+                                                return msgDateType.compareTo(OthermsgDateTpe) * -1;
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+
+                                            }
+                                            return 0;
+                                        }
+                                    });
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                           /* ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     conversations.clear();
@@ -115,7 +164,7 @@ public class MyChatsFragment extends Fragment {
                                     Log.d(TAG, "onSuccess: " + conversations);
                                     adapter.notifyDataSetChanged();
                                 }
-                            });
+                            });*/
 
 
                         }
@@ -124,7 +173,8 @@ public class MyChatsFragment extends Fragment {
                 });
 
         binding.listView.setAdapter(adapter);
-        adapter = new MyChatsListViewAdapter(getActivity(), R.layout.my_chats_list_item, conversations);
+        adapter = new MyChatsListViewAdapter(getActivity(), R.layout.my_chats_list_item, conversations,
+                mAuth.getCurrentUser().getUid());
         binding.listView.setAdapter(adapter);
 
         binding.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

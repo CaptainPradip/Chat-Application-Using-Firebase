@@ -1,11 +1,13 @@
 package edu.uncc.hw08;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +19,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -32,7 +35,9 @@ import java.util.UUID;
 
 import edu.uncc.hw08.adaptors.ChatRecyclerViewAdapter;
 import edu.uncc.hw08.databinding.FragmentChatBinding;
+import edu.uncc.hw08.models.Conversation;
 import edu.uncc.hw08.models.Message;
+import edu.uncc.hw08.models.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,14 +51,16 @@ public class ChatFragment extends Fragment {
 
 
     private static final String ARG_PARAM = "param1";
+    private static final String ARG_PARAM_CONV = "CONV";
+
     ArrayList<Message> messages = new ArrayList<>();
     ChatListener mListener;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ChatRecyclerViewAdapter adapter;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FragmentChatBinding binding;
-    // TODO: Rename and change types of parameters
     private String mConversationId;
+    Conversation mConversation;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -63,6 +70,7 @@ public class ChatFragment extends Fragment {
         ChatFragment fragment = new ChatFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM, conversationId);
+        //args.putSerializable(ARG_PARAM_CONV, conversation);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +80,7 @@ public class ChatFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mConversationId = getArguments().getString(ARG_PARAM);
+            //mConversation = (Conversation) getArguments().getSerializable(ARG_PARAM_CONV);
         }
     }
 
@@ -90,6 +99,33 @@ public class ChatFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.scrollToPosition(messages.size() - 1);
+
+
+        db.collection("conversations").document(mConversationId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String id1 = documentSnapshot.getString("senderId");
+                        String id2 = documentSnapshot.getString("receiverId");
+                        String temp;
+                        if (!mAuth.getCurrentUser().getUid().equals(id1))
+                            temp = id1;
+                        else
+                            temp = id2;
+
+                        FirebaseFirestore.getInstance().collection("users").document(temp)
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        getActivity().setTitle("Chat - " + documentSnapshot.getString("userName"));
+                                    }
+                                });
+                    }
+                });
+
+
 
         db.collection("conversations").document(mConversationId).collection("messages").orderBy("messageAt")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -122,7 +158,7 @@ public class ChatFragment extends Fragment {
                     HashMap<String, Object> map = new HashMap<>();
                     String messageId = UUID.randomUUID().toString();
                     LocalDateTime localDateTime = LocalDateTime.now();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
                     String dateTime = localDateTime.format(formatter);
                     map.put("messageAt", dateTime);
                     map.put("messageId", messageId);
@@ -144,6 +180,14 @@ public class ChatFragment extends Fragment {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             binding.editTextMessage.setText("");
+                                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                                            //Find the currently focused view, so we can grab the correct window token from it.
+                                            View view = getActivity().getCurrentFocus();
+                                            //If no view currently has focus, create a new one, just so we can grab a window token from it
+                                            if (view == null) {
+                                                view = new View(getActivity());
+                                            }
+                                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                         }
                                     });
                         }
@@ -151,9 +195,94 @@ public class ChatFragment extends Fragment {
                 }
             }
         });
+
+        binding.buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.cancel();
+            }
+        });
+
         binding.buttonDeleteChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /*db.collection("conversations").document(mConversationId)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                String senderId = documentSnapshot.getString("senderId");
+                                String receiverId = documentSnapshot.getString("receiverId");
+
+                                db.collection("users").document(senderId)
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            conversations.clear();
+                                            temp.clear();
+                                            conversations = (ArrayList<String>) documentSnapshot.get("conversations");
+                                            for (String id: conversations) {
+                                                if (id != mConversationId)
+                                                    temp.add(id);
+                                            }
+                                            map.clear();
+                                            map.put("userId", senderId);
+                                            map.put("isOnline", documentSnapshot.getBoolean("isOnline"));
+                                            map.put("userName", documentSnapshot.getString("userName"));
+                                            map.put("conversations", temp);
+                                        }
+                                    });
+
+                                db.collection("users").document(senderId)
+                                        .set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+
+                                            }
+                                        });
+
+                                db.collection("users").document(receiverId)
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                conversations.clear();
+                                                temp.clear();
+                                                conversations = (ArrayList<String>) documentSnapshot.get("conversations");
+                                                for (String id: conversations) {
+                                                    if (id != mConversationId)
+                                                        temp.add(id);
+                                                }
+                                                map.clear();
+                                                map.put("userId", receiverId);
+                                                map.put("isOnline", documentSnapshot.getBoolean("isOnline"));
+                                                map.put("userName", documentSnapshot.getString("userName"));
+                                                map.put("conversations", temp);
+                                            }
+                                        });
+
+                                db.collection("users").document(receiverId)
+                                        .set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+
+                                            }
+                                        });
+
+                            }
+                        });*/
+
+                db.collection("conversations")
+                        .document(mConversationId)
+                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                mListener.cancel();
+                            }
+                        });
+
                 for (Message message : messages
                 ) {
                     db.collection("conversations").document(mConversationId).collection("messages").document(message.getMessageId())
@@ -171,6 +300,7 @@ public class ChatFragment extends Fragment {
                                 }
                             });
                 }
+
 
             }
         });
