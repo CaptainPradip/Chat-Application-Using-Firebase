@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -129,7 +130,6 @@ public class ChatFragment extends Fragment {
                     map.put("senderId", mAuth.getCurrentUser().getUid());
                     map.put("messageBy", mAuth.getCurrentUser().getDisplayName());
                     HashMap<String, Object> conversationMap = new HashMap<>();
-
                     LocalDateTime now = LocalDateTime.now();
                     String dateTimeString = now.format(formatter);
                     conversationMap.put("latestMessage", message);
@@ -143,17 +143,37 @@ public class ChatFragment extends Fragment {
                                     .set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
-
+                                            binding.editTextMessage.setText("");
                                         }
                                     });
-
-
                         }
                     });
                 }
             }
         });
+        binding.buttonDeleteChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (Message message : messages
+                ) {
+                    db.collection("conversations").document(mConversationId).collection("messages").document(message.getMessageId())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
 
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    MyAlertDialog.show(getContext(), "Error", e.getMessage());
+                                }
+                            });
+                }
+
+            }
+        });
     }
 
     @Override
