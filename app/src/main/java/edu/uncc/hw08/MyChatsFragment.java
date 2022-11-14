@@ -125,7 +125,7 @@ public class MyChatsFragment extends Fragment {
                                         public int compare(Conversation conversation, Conversation t1) {
                                             String msgDate = conversation.getLatestMessageAt();
                                             String OthermsgDate = t1.getLatestMessageAt();
-                                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+                                            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 
                                             try {
                                                 Date msgDateType = formatter.parse(msgDate);
