@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -103,6 +104,7 @@ public class ChatFragment extends Fragment {
                             message.setSenderId(doc.getString("senderId"));
                             messages.add(message);
                         }
+                        Collections.sort(messages);
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -130,12 +132,10 @@ public class ChatFragment extends Fragment {
 
                     LocalDateTime now = LocalDateTime.now();
                     String dateTimeString = now.format(formatter);
-
-                    map.put("senderId", mAuth.getCurrentUser().getUid());
-                    map.put("latestMessage", message);
-                    map.put("latestMessageAt", dateTimeString);
+                    conversationMap.put("latestMessage", message);
+                    conversationMap.put("latestMessageAt", dateTimeString);
                     DocumentReference ref = db.collection("conversations").document(mConversationId);
-                    map.put("latestMessageBy", mAuth.getCurrentUser().getDisplayName());
+                    conversationMap.put("latestMessageBy", mAuth.getCurrentUser().getDisplayName());
                     ref.update(conversationMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {

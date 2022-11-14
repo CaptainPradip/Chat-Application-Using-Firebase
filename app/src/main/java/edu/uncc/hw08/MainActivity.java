@@ -14,12 +14,12 @@ public class MainActivity extends AppCompatActivity implements MyChatsFragment.M
         setContentView(R.layout.activity_main);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.rootView, new MyChatsFragment())
+                .add(R.id.rootView, new MyChatsFragment())
                 .commit();
     }
 
     @Override
-    public void gotoConversation(String conversationId) {
+    public void gotoConversation(String conversationId, String senderId, String receiverId) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.rootView, ChatFragment.newInstance(conversationId))
                 .addToBackStack(null)

@@ -1,8 +1,15 @@
 package edu.uncc.hw08.models;
 
-import java.io.Serializable;
+import android.os.Build;
 
-public class Message implements Serializable {
+import androidx.annotation.RequiresApi;
+
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Message implements Serializable, Comparable<Message> {
     public String messageBy;
     public String message;
     public String messageAt;
@@ -58,5 +65,22 @@ public class Message implements Serializable {
                 ", messageId='" + messageId + '\'' +
                 ", senderId='" + senderId + '\'' +
                 '}';
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public int compareTo(Message o) {
+        String msgDate = this.getMessageAt();
+        String OthermsgDate = o.getMessageAt();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+
+        try {
+            Date msgDateType = formatter.parse(msgDate);
+            Date OthermsgDateTpe = formatter.parse(OthermsgDate);
+            return msgDateType.compareTo(OthermsgDateTpe);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }

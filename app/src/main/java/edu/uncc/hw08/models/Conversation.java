@@ -124,6 +124,5 @@ public class Conversation implements Serializable, Comparable<Conversation> {
             e.printStackTrace();
             return -1;
         }
-
     }
 }
