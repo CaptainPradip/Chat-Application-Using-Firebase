@@ -70,7 +70,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         }
 
         void setupUI(Message chat) {
-            if (chat.getSenderId() == mAuth.getCurrentUser().getUid()) {
+            if (chat.getSenderId().equals(mAuth.getCurrentUser().getUid())) {
                 mBinding.textViewMsgBy.setText("Me");
             } else {
                 mBinding.textViewMsgBy.setText(chat.messageBy);
