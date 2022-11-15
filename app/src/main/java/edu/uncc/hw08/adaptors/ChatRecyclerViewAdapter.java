@@ -21,6 +21,12 @@ import edu.uncc.hw08.MyAlertDialog;
 import edu.uncc.hw08.databinding.ChatListItemBinding;
 import edu.uncc.hw08.models.Message;
 
+/*
+ * Homework 08
+ * ChatRecyclerViewAdapter.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
 
     private final String mConversationId;

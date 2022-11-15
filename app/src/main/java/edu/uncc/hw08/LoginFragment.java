@@ -22,6 +22,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import edu.uncc.hw08.databinding.FragmentLoginBinding;
 
+/*
+ * Homework 08
+ * LoginFragment.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class LoginFragment extends Fragment {
     public LoginFragment() {
         // Required empty public constructor

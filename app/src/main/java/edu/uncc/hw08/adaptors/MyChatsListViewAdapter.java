@@ -21,6 +21,12 @@ import java.util.List;
 import edu.uncc.hw08.R;
 import edu.uncc.hw08.models.Conversation;
 
+/*
+ * Homework 08
+ * MyChatsListViewAdapter.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class MyChatsListViewAdapter extends ArrayAdapter<Conversation> {
 
     ArrayList<Conversation> myChats = new ArrayList<Conversation>();
@@ -57,13 +63,13 @@ public class MyChatsListViewAdapter extends ArrayAdapter<Conversation> {
             temp = id2;
 
         FirebaseFirestore.getInstance().collection("users").document(temp)
-                        .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        viewHolder.textViewMsgBy.setText(documentSnapshot.getString("userName"));
-                                    }
-                                });
+            .get()
+            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    viewHolder.textViewMsgBy.setText(documentSnapshot.getString("userName"));
+                }
+            });
 
         viewHolder.textViewMsgOn.setText(myChat.latestMessageAt);
         viewHolder.textViewMsgText.setText(myChat.latestMessage);

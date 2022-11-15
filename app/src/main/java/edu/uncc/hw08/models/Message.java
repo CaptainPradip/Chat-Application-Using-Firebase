@@ -9,6 +9,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/*
+ * Homework 08
+ * Message.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class Message implements Serializable, Comparable<Message> {
     public String messageBy;
     public String message;

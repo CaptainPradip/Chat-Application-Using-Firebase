@@ -37,6 +37,12 @@ import edu.uncc.hw08.models.Conversation;
 import edu.uncc.hw08.models.Message;
 import edu.uncc.hw08.models.User;
 
+/*
+ * Homework 08
+ * MyChatsFragment.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class MyChatsFragment extends Fragment {
     public static final String TAG = "MyChatsFragment";
     private static final String ARG_PARAM = "param1";
@@ -141,32 +147,6 @@ public class MyChatsFragment extends Fragment {
                                     adapter.notifyDataSetChanged();
                                 }
                             });
-
-                           /* ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    conversations.clear();
-                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                        Conversation conversation = new Conversation();
-                                        conversation.setLatestMessage(doc.getString("latestMessage"));
-                                        conversation.setLatestMessageAt(doc.getString("latestMessageAt"));
-                                        conversation.setLatestMessageBy(doc.getString("latestMessageBy"));
-                                        conversation.setId(doc.getString("id"));
-                                        conversation.setSenderId(doc.getString("senderId"));
-                                        conversation.setReceiverId(doc.getString("receiverId"));
-
-                                        conversation.setMessages((ArrayList<Message>) doc.get("messages"));
-                                        if (conversationIds.contains(conversation.id)) {
-                                            conversations.add(conversation);
-                                        }
-                                        Log.d(TAG, "onSuccess: " + conversation);
-                                    }
-                                    Log.d(TAG, "onSuccess: " + conversations);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });*/
-
-
                         }
 
                     }

@@ -10,6 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/*
+ * Homework 08
+ * Conversation.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class Conversation implements Serializable, Comparable<Conversation> {
     public String id;
     public String senderId;

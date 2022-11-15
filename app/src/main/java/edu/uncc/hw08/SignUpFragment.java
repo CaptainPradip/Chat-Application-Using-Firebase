@@ -26,6 +26,12 @@ import java.util.HashMap;
 
 import edu.uncc.hw08.databinding.FragmentSignUpBinding;
 
+/*
+ * Homework 08
+ * SignUpFragment.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class SignUpFragment extends Fragment {
 
     public SignUpFragment() {

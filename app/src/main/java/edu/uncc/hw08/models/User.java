@@ -3,6 +3,12 @@ package edu.uncc.hw08.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/*
+ * Homework 08
+ * User.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class User implements Serializable {
     String userId;
     boolean isOnline;

@@ -39,6 +39,12 @@ import edu.uncc.hw08.models.Conversation;
 import edu.uncc.hw08.models.Message;
 import edu.uncc.hw08.models.User;
 
+/*
+ * Homework 08
+ * CreateChatFragment.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class CreateChatFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";

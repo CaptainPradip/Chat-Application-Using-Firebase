@@ -21,6 +21,12 @@ import edu.uncc.hw08.databinding.UsersRowItemBinding;
 import edu.uncc.hw08.models.Conversation;
 import edu.uncc.hw08.models.User;
 
+/*
+ * Homework 08
+ * UserRecyclerViewAdapter.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
 
     ArrayList<User> users = new ArrayList<User>();

@@ -9,6 +9,12 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import edu.uncc.hw08.models.User;
 
+/*
+ * Homework 08
+ * AuthActivity.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class AuthActivity extends AppCompatActivity implements
         LoginFragment.LoginListener, SignUpFragment.SignUpListener {
 

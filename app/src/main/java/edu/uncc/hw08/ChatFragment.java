@@ -39,16 +39,13 @@ import edu.uncc.hw08.models.Conversation;
 import edu.uncc.hw08.models.Message;
 import edu.uncc.hw08.models.User;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ChatFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+/*
+ * Homework 08
+ * ChatFragment.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class ChatFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
 
     private static final String ARG_PARAM = "param1";
     private static final String ARG_PARAM_CONV = "CONV";

@@ -7,6 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import edu.uncc.hw08.models.Conversation;
 
+/*
+ * Homework 08
+ * MainActivity.java
+ * Authors: 1) Sudhanshu Dalvi, 2) Pradip Nemane
+ * */
+
 public class MainActivity extends AppCompatActivity implements MyChatsFragment.MyChatsListener, ChatFragment.ChatListener,
         CreateChatFragment.CreateChatListener {
 
@@ -46,9 +52,7 @@ public class MainActivity extends AppCompatActivity implements MyChatsFragment.M
 
     @Override
     public void cancel() {
-        /*ChatFragment fragment = (ChatFragment) getSupportFragmentManager().findFragmentByTag("ChatFragment");
-        if (fragment != null)
-            getSupportFragmentManager().popBackStack();*/
+
         getSupportFragmentManager().popBackStack();
     }
 
